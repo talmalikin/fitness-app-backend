@@ -16,7 +16,16 @@ import settingsRoutes from "./routes/settings.js";
 
 dotenv.config();
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // הכתובת לפיתוח במחשב שלך
+      "https://pakal.online",
+      "https://www.pakal.online",
+    ],
+    credentials: true, // מאפשר העברת קוקיז וטוקנים
+  })
+);
 app.use(express.json());
 
 // חיבור למסד נתונים
