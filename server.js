@@ -70,4 +70,9 @@ app.use("/workout", workoutRoutes);
 app.use("/settings", settingsRoutes);
 
 const PORT = process.env.PORT || 3000;
+// בדיקת בריאות לשרת (כדי ש-UptimeRobot יראה ירוק)
+app.get("/", (req, res) => {
+  res.send("Fitness App Server is Running!");
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
