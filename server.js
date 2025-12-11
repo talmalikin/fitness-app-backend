@@ -35,7 +35,7 @@ mongoose
   .catch((err) => console.log(err));
 
 cron.schedule(
-  "0 0 * * 0",
+  "0 0 * * 5",
   async () => {
     console.log("⏰ Weekly Reset: Starting scheduled task...");
 
