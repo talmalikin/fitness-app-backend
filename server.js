@@ -69,6 +69,41 @@ app.use("/users", userRoutes);
 app.use("/workout", workoutRoutes);
 app.use("/settings", settingsRoutes);
 
+
+
+
+app.get('/fix-all-points', async (req, res) => {
+  try {
+    const users = await User.find({});
+    let updateCount = 0;
+
+    for (const user of users) {
+      const workouts = await Workout.find({ user: user._id });
+      
+      let calculatedPoints = 0;
+
+      for (const w of workouts) {
+        const pullupsPoints = Math.floor((w.exercises.pullups || 0) / 10);
+        const pushupsPoints = Math.floor((w.exercises.pushups || 0) / 10);
+        
+        const runningPoints = Math.floor((w.exercises.running || 0) / 1) * 2; 
+
+        calculatedPoints += (pullupsPoints + pushupsPoints + runningPoints);
+      }
+
+      user.totalPoints = calculatedPoints;
+      user.score = calculatedPoints; 
+      await user.save();
+      updateCount++;
+    }
+
+    res.send(`✅ סיימתי! תוקן הניקוד ל-${updateCount} משתמשים לפי החוקים החדשים.`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("שגיאה בתיקון הנתונים: " + err.message);
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 // בדיקת בריאות לשרת (כדי ש-UptimeRobot יראה ירוק)
 app.get("/", (req, res) => {

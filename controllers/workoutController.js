@@ -7,13 +7,9 @@ const TYPE_MAPPING = {
   up_down: "pushups",
 };
 
-// POINTS_MAPPING הוסר, כי כעת אנו משתמשים במחלקים שלמים
-
 /**
  * פונקציית עזר: קובעת את המחלק הדרוש לחישוב נקודות שלמות.
- * (כלומר, כמה יחידות צריך כדי לקבל נקודה אחת).
- * @param {string} exercise - שם התרגיל (climb, run, up_down).
- * @returns {number} - המחלק (10 או 1).
+ * (כלומר, כמה יחידות צריך כדי לקבל נקודה אחת בסיסית).
  */
 const getUnitsPerPoint = (exercise) => {
   switch (exercise) {
@@ -22,7 +18,7 @@ const getUnitsPerPoint = (exercise) => {
       // 10 יחידות = 1 נקודה
       return 10;
     case "run":
-      // 1 ק"מ = 1 נקודה
+      // 1 ק"מ = 1 יחידת בסיס
       return 1;
     default:
       return 1; // ברירת מחדל בטוחה
@@ -37,6 +33,9 @@ export const updateActivity = async (req, res) => {
 
     // קביעת המחלק הנדרש
     const unitsPerPoint = getUnitsPerPoint(exercise);
+
+    // 🛑 קביעת המכפיל: ריצה שווה פי 2 נקודות
+    const pointsMultiplier = exercise === "run" ? 2 : 1;
 
     if (!dbField) return res.status(400).json({ message: "תרגיל לא חוקי" });
 
@@ -62,8 +61,8 @@ export const updateActivity = async (req, res) => {
     const oldAmount = workout.exercises[dbField] || 0;
 
     // 2. חישוב סך הנקודות הקודם (מספר שלם)
-    // 19 מתח -> Math.floor(19 / 10) = 1 נקודה
-    const oldTotalPointsAwarded = Math.floor(oldAmount / unitsPerPoint);
+    // 🛑 שינוי: הוספנו כפל ב-pointsMultiplier
+    const oldTotalPointsAwarded = Math.floor(oldAmount / unitsPerPoint) * pointsMultiplier;
 
     // בדיקה שלא יורד מתחת ל-0
     if (amount < 0 && oldAmount + amount < 0) {
@@ -80,17 +79,21 @@ export const updateActivity = async (req, res) => {
     const newAmount = workout.exercises[dbField];
 
     // 6. חישוב סך הנקודות החדש (מספר שלם)
-    // 20 מתח -> Math.floor(20 / 10) = 2 נקודות
-    const newTotalPointsAwarded = Math.floor(newAmount / unitsPerPoint);
+    // 🛑 שינוי: הוספנו כפל ב-pointsMultiplier
+    const newTotalPointsAwarded = Math.floor(newAmount / unitsPerPoint) * pointsMultiplier;
 
-    // 7. השינוי נטו בנקודות (מספר שלם)
-    // אם עברנו מ-19 ל-20 מתח, השינוי הוא: 2 - 1 = 1 נקודה
+    // 7. השינוי נטו בנקודות
     const pointsChange = newTotalPointsAwarded - oldTotalPointsAwarded;
 
-    // 8. עדכון נקודות המשתמש
+    // 8. עדכון נקודות המשתמש (כולל score קבוצתי)
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { $inc: { totalPoints: pointsChange } },
+      { 
+        $inc: { 
+            totalPoints: pointsChange,
+            score: pointsChange // עדכון גם לניקוד לטבלה אם קיים
+        } 
+      },
       { new: true }
     );
 
