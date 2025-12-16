@@ -7,6 +7,7 @@ import cron from "node-cron"; // 1. ייבוא ה-Cron
 // ייבוא מודל המשתמש (כדי שנוכל לאפס את הנקודות)
 // 🛑 וודא שהנתיב הזה נכון לקובץ ה-User שלך
 import User from "./models/User.js";
+import Workout from "./models/Workout.js";
 
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
