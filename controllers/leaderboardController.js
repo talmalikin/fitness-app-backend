@@ -44,7 +44,7 @@ export const getTeamLeaderboard = async (req, res) => {
   try {
     // 1️⃣ סיכום נקודות לפי קבוצה
     const teamsFromDb = await User.aggregate([
-      { $match: { role: "user", team: { $in: [1, 2, 3, 4] } } }, // סנן לפי הקבוצות החוקיות
+      { $match: { role: "user", team: { $in: [1, 2, 3, 4,5] } } }, // סנן לפי הקבוצות החוקיות
       {
         $group: {
           _id: "$team", // קיבוץ לפי שדה team
