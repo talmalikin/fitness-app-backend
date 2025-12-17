@@ -45,7 +45,7 @@ export const getUserTotalPoints = async (req, res) => {
 export const getTopUserPerTeam = async (req, res) => {
   try {
     // מערך עם 4 קבוצות
-    const teams = [1, 2, 3, 4];
+    const teams = [1, 2, 3, 4,5];
 
     // מציאת המשתמש המוביל בכל קבוצה
     const topUsers = await Promise.all(
