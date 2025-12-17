@@ -62,7 +62,7 @@ export const getTeamLeaderboard = async (req, res) => {
     ]);
 
     // 2️⃣ ודא שיש תמיד 4 קבוצות
-    const allTeams = [1, 2, 3, 4];
+    const allTeams = [1, 2, 3, 4,5];
     const leaderboard = allTeams.map((teamNum) => {
       const team = teamsFromDb.find((t) => t.teamNumber === teamNum);
       return {
