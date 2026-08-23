@@ -13,7 +13,6 @@ const TYPE_MAPPING = {
  */
 const getUnitsPerPoint = (exercise) => {
   switch (exercise) {
-    case "climb":
     case "up_down":
       // 10 יחידות = 1 נקודה
       return 10;
