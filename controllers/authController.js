@@ -12,7 +12,7 @@ export const register = async (req, res) => {
     }
 
     // בדיקה אם הקבוצה תקינה
-    if (![1, 2, 3, 4,5].includes(team)) {
+    if (![5, 6, 7,8,9].includes(team)) {
       return res.status(400).json({ message: "Invalid team number" });
     }
 
