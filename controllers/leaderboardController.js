@@ -44,7 +44,7 @@ export const getTeamLeaderboard = async (req, res) => {
   try {
     // 1️⃣ סיכום נקודות לפי קבוצה
     const teamsFromDb = await User.aggregate([
-      { $match: { role: "user", team: { $in: [1, 2, 3, 4,5] } } }, // סנן לפי הקבוצות החוקיות
+      { $match: { role: "user", team: { $in: [5,6,7,8,9] } } }, // סנן לפי הקבוצות החוקיות
       {
         $group: {
           _id: "$team", // קיבוץ לפי שדה team
@@ -62,7 +62,7 @@ export const getTeamLeaderboard = async (req, res) => {
     ]);
 
     // 2️⃣ ודא שיש תמיד 4 קבוצות
-    const allTeams = [5, 6, 7, 8,9];
+    const allTeams = [5,6,7,8,9];
     const leaderboard = allTeams.map((teamNum) => {
       const team = teamsFromDb.find((t) => t.teamNumber === teamNum);
       return {
